@@ -37,6 +37,143 @@
             margin-bottom: 12px;
             opacity: 0;
             transform: scale(0.8);
+            transition: all 1.5s ease-in-out;
+        }
+        .main-title.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .sub-message {
+            color: #ffdeeb;
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 1.5;
+            text-shadow: 0 0 10px #ff0055;
+            min-height: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas"></canvas>
+    
+    <div class="container">
+        <div class="main-title" id="textMsg">I Love You Chotu ❤️</div>
+        <div class="sub-message" id="typewriter"></div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        // Floating Hearts Background
+        let floatingHearts = [];
+        for (let i = 0; i < 45; i++) {
+            floatingHearts.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 12 + 6,
+                speedY: Math.random() * 1.5 + 0.5,
+                opacity: Math.random() * 0.7 + 0.3
+            });
+        }
+
+        function drawSmallHeart(x, y, size, opacity) {
+            ctx.save();
+            ctx.globalAlpha = opacity;
+            ctx.fillStyle = '#ff2a6d';
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.bezierCurveTo(x - size / 2, y - size / 2, x - size, y + size / 3, x, y + size);
+            ctx.bezierCurveTo(x + size, y + size / 3, x + size / 2, y - size / 2, x, y);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        // Main Drawing Heart Setup
+        let t = 0;
+        let heartPoints = [];
+
+        function getHeartPoint(angle) {
+            let x = 16 * Math.pow(Math.sin(angle), 3);
+            let y = -(13 * Math.cos(angle) - 5 * Math.cos(2 * angle) - 2 * Math.cos(3 * angle) - Math.cos(4 * angle));
+            let scale = Math.min(canvas.width, canvas.height) / 50;
+            return {
+                x: canvas.width / 2 + x * scale,
+                y: canvas.height / 2 - 80 + y * scale
+            };
+        }
+
+        // Typewriter Effect Function
+        const messageText = "Mera pyara bachu me terse bohot pyar karta hu tu bohot ach bachi h i really love you betu 😚";
+        let charIndex = 0;
+        let isTyping = false;
+
+        function startTyping() {
+            if (charIndex < messageText.length) {
+                document.getElementById("typewriter").innerHTML += messageText.charAt(charIndex);
+                charIndex++;
+                setTimeout(startTyping, 70); // speed of typing
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(13, 2, 8, 0.2)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 1. Draw Floating Background Hearts
+            floatingHearts.forEach(h => {
+                h.y -= h.speedY;
+                if (h.y < -20) {
+                    h.y = canvas.height + 20;
+                    h.x = Math.random() * canvas.width;
+                }
+                drawSmallHeart(h.x, h.y, h.size, h.opacity);
+            });
+
+            // 2. Animate Main Heart
+            if (t <= Math.PI * 2) {
+                let p = getHeartPoint(t);
+                heartPoints.push(p);
+                t += 0.04;
+            } else {
+                document.getElementById('textMsg').classList.add('show');
+                if (!isTyping) {
+                    isTyping = true;
+                    setTimeout(startTyping, 800); // Title aane ke thodi der baad typing start hogi
+                }
+            }
+
+            if (heartPoints.length > 1) {
+                ctx.beginPath();
+                ctx.strokeStyle = '#ff0055';
+                ctx.lineWidth = 4;
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = '#ff0055';
+                ctx.moveTo(heartPoints[0].x, heartPoints[0].y);
+                for (let i = 1; i < heartPoints.length; i++) {
+                    ctx.lineTo(heartPoints[i].x, heartPoints[i].y);
+                }
+                ctx.stroke();
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
+            margin-bottom: 12px;
+            opacity: 0;
+            transform: scale(0.8);
             transition: all 1.5s
             opacity: 1;
             transform: scale(1);
