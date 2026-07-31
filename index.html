@@ -3,14 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animation</title>
+    <title>Glowing Spiral Animation</title>
     <style>
-        body { margin: 0; overflow: hidden; background-color: black; }
-        canvas { display: block; }
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        canvas {
+            display: block;
+        }
     </style>
 </head>
 <body>
     <canvas id="canvas"></canvas>
+
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
@@ -22,18 +33,52 @@
         resize();
         window.addEventListener('resize', resize);
 
-        let i = 0, h = 0;
-        const n = 36, maxCount = 200;
+        let angle = 0;
+        let particles = [];
+        const totalParticles = 300;
 
-        function HSVtoRGB(h, s, v) {
-            let r, g, b, i, f, p, q, t;
-            i = Math.floor(h * 6); f = h * 6 - i;
-            p = v * (1 - s); q = v * (1 - f * s); t = v * (1 - (1 - f) * s);
-            switch (i % 6) {
-                case 0: r = v, g = t, b = p; break;
-                case 1: r = q, g = v, b = p; break;
-                case 2: r = p, g = v, b = t; break;
-                case 3: r = p, g = q, b = v; break;
+        for (let i = 0; i < totalParticles; i++) {
+            particles.push({
+                radius: i * 1.2,
+                angle: i * 0.1,
+                speed: 0.02 + (i * 0.00005),
+                color: `hsl(${i * 2}, 100%, 60%)`,
+                size: 2 + (i % 3)
+            });
+        }
+
+        function animate() {
+            // Trail effect
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+
+            particles.forEach((p, index) => {
+                p.angle += p.speed;
+
+                let currentRadius = p.radius + Math.sin(angle + index * 0.05) * 20;
+
+                let x = centerX + Math.cos(p.angle) * currentRadius;
+                let y = centerY + Math.sin(p.angle) * currentRadius;
+
+                ctx.beginPath();
+                ctx.arc(x, y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = p.color;
+                ctx.fill();
+            });
+
+            angle += 0.01;
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
                 case 4: r = t, g = p, b = v; break;
                 case 5: r = v, g = p, b = q; break;
             }
