@@ -11,7 +11,7 @@
       box-sizing: border-box;
     }
 
-    /* --- Romantic Background --- */
+    /* --- Romantic Gradient Background --- */
     body {
       background: radial-gradient(circle at center, #2e0821 0%, #12020e 70%, #050004 100%);
       color: #ffffff;
@@ -20,11 +20,12 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
+      justify-content: center;
       overflow-x: hidden;
-      padding: 40px 20px;
+      padding: 20px;
     }
 
+    /* --- Canvas Container --- */
     .container {
       display: flex;
       flex-direction: column;
@@ -38,7 +39,7 @@
       filter: drop-shadow(0 0 15px rgba(255, 105, 180, 0.3));
     }
 
-    /* --- Message Box --- */
+    /* --- Message Box Below Heart --- */
     .message-box {
       margin-top: 20px;
       text-align: center;
@@ -57,46 +58,7 @@
       max-width: 90%;
     }
 
-    /* --- Photo Section Below Text --- */
-    .photo-section {
-      margin-top: 50px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-    }
-
-    /* Heart Shape Frame for Photo */
-    .heart-photo-frame {
-      width: 220px;
-      height: 220px;
-      clip-path: path("M110 35 C110 35 90 0 55 0 C25 0 0 25 0 60 C0 110 110 185 110 185 C110 185 220 110 220 60 C220 25 195 0 165 0 C130 0 110 35 110 35 Z");
-      background: #ff4d94;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      animation: heartbeat 2s infinite ease-in-out, floatPhoto 4s infinite ease-in-out;
-      filter: drop-shadow(0 0 25px rgba(255, 20, 147, 0.8));
-    }
-
-    .heart-photo-frame img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    /* Heart Pulse & Float Animations */
-    @keyframes heartbeat {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.08); }
-    }
-
-    @keyframes floatPhoto {
-      0%, 100% { transform: translateY(0px) scale(1); }
-      50% { transform: translateY(-10px) scale(1.05); }
-    }
-
-    /* Floating Hearts in Background */
+    /* Floating Heart Effect in Background */
     .bg-heart {
       position: absolute;
       color: rgba(255, 182, 193, 0.15);
@@ -116,26 +78,22 @@
 <body>
 
   <div class="container">
+    <!-- Heart Canvas Animation -->
     <canvas id="heartCanvas" width="500" height="420"></canvas>
     
+    <!-- Romantic Message Below -->
     <div class="message-box" id="loveMessage"></div>
-
-    <div class="photo-section">
-      <div class="heart-photo-frame">
-        <img src="1000015541.jpg" alt="Our Photo">
-      </div>
-    </div>
   </div>
 
   <script>
-    // --- Heart Canvas Animation ---
+    // --- CANVAS ANIMATION (Same Python Logic in JS) ---
     const canvas = document.getElementById('heartCanvas');
     const ctx = canvas.getContext('2d');
 
     const width = canvas.width;
     const height = canvas.height;
     const centerX = width / 2;
-    const centerY = height / 2 - 30;
+    const centerY = height / 2 - 30; // Heart center
 
     const colors = ['#ff0000', '#0080ff', '#00ff00', '#ffff00', '#00ffff', '#ff00ff', '#ffa500', '#ff69b4'];
 
@@ -147,6 +105,7 @@
 
       const angle = i * (Math.PI * 2) / 120;
       
+      // Heart Equation
       const x = 16 * Math.pow(Math.sin(angle), 3) * 11;
       const y = -(13 * Math.cos(angle) - 5 * Math.cos(2 * angle) - 2 * Math.cos(3 * angle) - Math.cos(4 * angle)) * 11;
 
@@ -155,6 +114,7 @@
 
       const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
+      // Draw Lines & Rays
       ctx.beginPath();
       ctx.moveTo(centerX, centerY);
       ctx.lineTo(px, py);
@@ -162,6 +122,7 @@
       ctx.lineWidth = 1;
       ctx.stroke();
 
+      // Draw Star Burst effect at heart boundaries
       for (let j = 0; j < 8; j++) {
         const burstAngle = (j * 45) * (Math.PI / 180);
         ctx.beginPath();
@@ -172,12 +133,14 @@
       }
 
       i++;
-      setTimeout(drawSegment, 40);
+      setTimeout(drawSegment, 40); // Controls animation speed
     }
 
+    // Start drawing heart
     drawSegment();
 
-    // --- Typewriter Message Animation ---
+
+    // --- TYPING ANIMATION FOR MESSAGE ---
     const textToType = `i love you 💗\nmera pyare chotu me terse bohot pyar karta hu\nmujhe kabhi akele mat chorna mere pass tere alawa koi nhi h\ntu meri puri jindgi h 🫂\ni loveeeeeee youuuuuuu 🫂🥰`;
 
     const messageElement = document.getElementById('loveMessage');
@@ -187,13 +150,15 @@
       if (textIndex < textToType.length) {
         messageElement.textContent += textToType.charAt(textIndex);
         textIndex++;
-        setTimeout(typeWriter, 45);
+        setTimeout(typeWriter, 45); // Typing speed
       }
     }
 
+    // Start message typing shortly after page loads
     setTimeout(typeWriter, 500);
 
-    // --- Background Floating Hearts ---
+
+    // --- BACKGROUND FLOATING HEARTS EFFECT ---
     function createBgHeart() {
       const heart = document.createElement('div');
       heart.classList.add('bg-heart');
@@ -213,3 +178,4 @@
 
 </body>
 </html>
+ease-in-out;
