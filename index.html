@@ -1,39 +1,183 @@
-import turtle
-import math
-import random
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For My Love 💗</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-# --- Screen Setup ---
-screen = turtle.Screen()
-screen.setup(width=800, height=800)
+    /* --- Romantic Gradient Background --- */
+    body {
+      background: radial-gradient(circle at center, #2e0821 0%, #12020e 70%, #050004 100%);
+      color: #ffffff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      padding: 20px;
+    }
 
-# Setting a romantic gradient-style dark pink background
-screen.bgcolor("#1a000d")  # Deep romantic dark-pink/maroon tone
-screen.title("For My Love 💗")
+    /* --- Canvas Container --- */
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      max-width: 800px;
+      width: 100%;
+    }
 
-# --- Turtle Setup ---
-t = turtle.Turtle()
-t.speed(0)
-t.hideturtle()
-t.pensize(1)
+    canvas {
+      filter: drop-shadow(0 0 15px rgba(255, 105, 180, 0.3));
+    }
 
-colors = ['red', 'blue', 'lime', 'yellow', 'cyan', 'magenta', 'orange', 'pink']
+    /* --- Message Box Below Heart --- */
+    .message-box {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 1.15rem;
+      font-weight: 600;
+      line-height: 1.8;
+      color: #ffb3d9;
+      text-shadow: 0 0 10px rgba(255, 105, 180, 0.6), 0 0 20px rgba(255, 20, 147, 0.4);
+      background: rgba(255, 255, 255, 0.04);
+      padding: 20px 30px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 182, 193, 0.2);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      white-space: pre-line;
+      max-width: 90%;
+    }
 
-# --- Draw Rainbow Heart Pattern ---
-for i in range(129):
-    t.penup()
-    t.goto(0, 40)
-    angle = i * (math.pi * 2) / 120
-    x = 16 * (math.sin(angle) ** 3) * 15
-    y = (13 * math.cos(angle) - 5 * math.cos(2 * angle) - 2 * math.cos(3 * angle) - math.cos(4 * angle)) * 15
+    /* Floating Heart Effect in Background */
+    .bg-heart {
+      position: absolute;
+      color: rgba(255, 182, 193, 0.15);
+      font-size: 20px;
+      animation: float 6s infinite ease-in-out;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0) scale(1); opacity: 0.3; }
+      50% { transform: translateY(-30px) scale(1.2); opacity: 0.7; }
+      100% { transform: translateY(-60px) scale(1); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Heart Canvas Animation -->
+    <canvas id="heartCanvas" width="500" height="420"></canvas>
     
-    c = random.choice(colors)
-    t.color(c)
-    t.pendown()
-    t.goto(x, y)
-    
-    for _ in range(8):
-        t.forward(6)
-        t.backward(6)
+    <!-- Romantic Message Below -->
+    <div class="message-box" id="loveMessage"></div>
+  </div>
+
+  <script>
+    // --- CANVAS ANIMATION (Same Python Logic in JS) ---
+    const canvas = document.getElementById('heartCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const width = canvas.width;
+    const height = canvas.height;
+    const centerX = width / 2;
+    const centerY = height / 2 - 30; // Heart center
+
+    const colors = ['#ff0000', '#0080ff', '#00ff00', '#ffff00', '#00ffff', '#ff00ff', '#ffa500', '#ff69b4'];
+
+    let i = 0;
+    const totalSteps = 129;
+
+    function drawSegment() {
+      if (i >= totalSteps) return;
+
+      const angle = i * (Math.PI * 2) / 120;
+      
+      // Heart Equation
+      const x = 16 * Math.pow(Math.sin(angle), 3) * 11;
+      const y = -(13 * Math.cos(angle) - 5 * Math.cos(2 * angle) - 2 * Math.cos(3 * angle) - Math.cos(4 * angle)) * 11;
+
+      const px = centerX + x;
+      const py = centerY + y;
+
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+      // Draw Lines & Rays
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.lineTo(px, py);
+      ctx.strokeStyle = randomColor;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Draw Star Burst effect at heart boundaries
+      for (let j = 0; j < 8; j++) {
+        const burstAngle = (j * 45) * (Math.PI / 180);
+        ctx.beginPath();
+        ctx.moveTo(px, py);
+        ctx.lineTo(px + Math.cos(burstAngle) * 5, py + Math.sin(burstAngle) * 5);
+        ctx.strokeStyle = randomColor;
+        ctx.stroke();
+      }
+
+      i++;
+      setTimeout(drawSegment, 40); // Controls animation speed
+    }
+
+    // Start drawing heart
+    drawSegment();
+
+
+    // --- TYPING ANIMATION FOR MESSAGE ---
+    const textToType = `i love you 💗\nmera pyare chotu me terse bohot pyar karta hu\nmujhe kabhi akele mat chorna mere pass tere alawa koi nhi h\ntu meri puri jindgi h 🫂\ni loveeeeeee youuuuuuu 🫂🥰`;
+
+    const messageElement = document.getElementById('loveMessage');
+    let textIndex = 0;
+
+    function typeWriter() {
+      if (textIndex < textToType.length) {
+        messageElement.textContent += textToType.charAt(textIndex);
+        textIndex++;
+        setTimeout(typeWriter, 45); // Typing speed
+      }
+    }
+
+    // Start message typing shortly after page loads
+    setTimeout(typeWriter, 500);
+
+
+    // --- BACKGROUND FLOATING HEARTS EFFECT ---
+    function createBgHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('bg-heart');
+      heart.innerHTML = '💖';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.top = Math.random() * 100 + 'vh';
+      heart.style.fontSize = (Math.random() * 15 + 10) + 'px';
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 6000);
+    }
+
+    setInterval(createBgHeart, 400);
+  </script>
+
+</body>
+</html>
         t.right(45)
 
 # --- Add Love Message Below the Heart ---
