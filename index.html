@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animation</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: black; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        let i = 0, h = 0;
+        const n = 36, maxCount = 200;
+
+        function HSVtoRGB(h, s, v) {
+            let r, g, b, i, f, p, q, t;
+            i = Math.floor(h * 6); f = h * 6 - i;
+            p = v * (1 - s); q = v * (1 - f * s); t = v * (1 - (1 - f) * s);
+            switch (i % 6) {
+                case 0: r = v, g = t, b = p; break;
+                case 1: r = q, g = v, b = p; break;
+                case 2: r = p, g = v, b = t; break;
+                case 3: r = p, g = q, b = v; break;
+                case 4: r = t, g = p, b = v; break;
+                case 5: r = v, g = p, b = q; break;
+            }
+            return `rgb(${Math.round(r * 255)}, ${Math.round(g * 255)}, ${Math.round(b * 255)})`;
+        }
+
+        let x = canvas.width / 2, y = canvas.height / 2, angle = 0;
+
+        function drawNextStep() {
+            if (i >= maxCount) return;
+            ctx.strokeStyle = HSVtoRGB(h % 1, 1, 1);
+            ctx.lineWidth = 1.5;
+
+            let rad = angle * Math.PI / 180;
+            let newX = x + Math.cos(rad) * i;
+            let newY = y + Math.sin(rad) * i;
+            ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(newX, newY); ctx.stroke();
+            x = newX; y = newY; angle -= 135;
+
+            rad = angle * Math.PI / 180;
+            newX = x + Math.cos(rad) * i;
+            newY = y + Math.sin(rad) * i;
+            ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(newX, newY); ctx.stroke();
+            x = newX; y = newY; angle -= 30;
+
+            let radius = i, arcAngle = 45, steps = 10;
+            let stepAngle = arcAngle / steps;
+            let stepLen = (2 * Math.PI * radius * (arcAngle / 360)) / steps;
+
+            for (let s = 0; s < steps; s++) {
+                angle -= stepAngle;
+                rad = angle * Math.PI / 180;
+                newX = x + Math.cos(rad) * stepLen;
+                newY = y + Math.sin(rad) * stepLen;
+                ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(newX, newY); ctx.stroke();
+                x = newX; y = newY;
+            }
+
+            h += 1 / n; i++;
+            setTimeout(drawNextStep, 20);
+        }
+
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        drawNextStep();
+    </script>
+</body>
+</html>
