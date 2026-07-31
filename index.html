@@ -1,39 +1,66 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For Chotu ❤️</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            background: radial-gradient(circle at center, #1a001a 0%, #050008 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-        .container {
-            position: absolute;
-            bottom: 8%;
-            text-align: center;
-            z-index: 10;
-            padding: 0 20px;
-            max-width: 90%;
-        }
-        .main-title {
-            font-size: 32px;
-            font-weight: 800;
-            background: linear-gradient(45deg, #ff007f, #ff758c, #ff7eb3, #7b2cbf, #ff007f);
-            background-size: 300% 300%;
+import turtle
+import math
+import random
+
+# --- Screen Setup ---
+screen = turtle.Screen()
+screen.setup(width=800, height=800)
+
+# Setting a romantic gradient-style dark pink background
+screen.bgcolor("#1a000d")  # Deep romantic dark-pink/maroon tone
+screen.title("For My Love 💗")
+
+# --- Turtle Setup ---
+t = turtle.Turtle()
+t.speed(0)
+t.hideturtle()
+t.pensize(1)
+
+colors = ['red', 'blue', 'lime', 'yellow', 'cyan', 'magenta', 'orange', 'pink']
+
+# --- Draw Rainbow Heart Pattern ---
+for i in range(129):
+    t.penup()
+    t.goto(0, 40)
+    angle = i * (math.pi * 2) / 120
+    x = 16 * (math.sin(angle) ** 3) * 15
+    y = (13 * math.cos(angle) - 5 * math.cos(2 * angle) - 2 * math.cos(3 * angle) - math.cos(4 * angle)) * 15
+    
+    c = random.choice(colors)
+    t.color(c)
+    t.pendown()
+    t.goto(x, y)
+    
+    for _ in range(8):
+        t.forward(6)
+        t.backward(6)
+        t.right(45)
+
+# --- Add Love Message Below the Heart ---
+message_turtle = turtle.Turtle()
+message_turtle.hideturtle()
+message_turtle.penup()
+
+# Positioning the text nicely below the heart
+message_turtle.goto(0, -280)
+message_turtle.color("#ff99c8")  # Soft bright pink for text
+
+# Message text
+love_msg = (
+    "i love you 💗\n"
+    "mera pyare chotu me terse bohot pyar karta hu\n"
+    "mujhe kabhi akele mat chorna mere pass tere alawa koi nhi h\n"
+    "tu meri puri jindgi h 🫂\n"
+    "i loveeeeeee youuuuuuu 🫂🥰"
+)
+
+message_turtle.write(
+    love_msg, 
+    align="center", 
+    font=("Arial", 13, "bold")
+)
+
+turtle.done()
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: gradientShift 3s infinite alternate;
